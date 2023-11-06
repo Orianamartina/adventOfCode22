@@ -1,5 +1,5 @@
 
-with open("3input.txt", "r") as file:
+with open("day3/3input.txt", "r") as file:
     file_contents = file.read()
 
 contents = file_contents.split('\n')

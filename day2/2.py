@@ -18,10 +18,11 @@ scores = {
     "loose": 0
 }
 
-with open("2input.txt", "r") as file:
+with open("day2/2input.txt", "r") as file:
     file_contents = file.read()
 
 rounds = file_contents.split('\n')
+
 #El número de la derecha le gana al número a su izquierda
 figureScores =[3,1,2,3,1]
 
