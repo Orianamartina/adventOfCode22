@@ -4,8 +4,6 @@ B   paper     Y   2 p.
 C   scissors  Z   3 p.
 
 """
-
-
 scores = {
     "A": 1,
     "B": 2,
@@ -34,7 +32,6 @@ def winningCondition(opponent, player):
        figureScores[player] == (figureScores[opponent + 1])
    )
 
-
 score = 0
 for round in rounds:
     opponent = round[0]
@@ -48,7 +45,6 @@ for round in rounds:
     score += scores[player]
 
 print (f'Answer to puzzle 2.1: {score}')
-
 
 score = 0
 for round in rounds:

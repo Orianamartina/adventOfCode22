@@ -22,7 +22,7 @@ for group in number_group_lists:
     for i in range(3):
         if calories > top_calories[i]:
             top_calories.insert(i, calories)
-            top_calories  = top_calories[:3]
+            top_calories = top_calories[:3]
             break
 
 print (f'answer to puzzle 1.2: {sum(top_calories)}')
