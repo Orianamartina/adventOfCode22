@@ -22,15 +22,11 @@ with open("day2/2input.txt", "r") as file:
 rounds = file_contents.split('\n')
 
 #El número de la derecha le gana al número a su izquierda
-figureScores =[3,1,2,3,1]
-
-def winningCondition(opponent, player):
-   """ return(
-        (opponent == 1 and player == 2) or (opponent == 2 and player ==3) or (opponent == 3 and player == 1)
-    )"""
-   return(
-       figureScores[player] == (figureScores[opponent + 1])
-   )
+figure_scores =[3,1,2,3,1]
+def winning_condition(opponent, player):
+    return(
+       figure_scores[player] == (figure_scores[opponent + 1])
+    )
 
 score = 0
 for round in rounds:
@@ -38,7 +34,7 @@ for round in rounds:
     player = round[2]
     if scores[opponent] == scores[player]:
         score += scores["draw"]
-    elif winningCondition(scores[opponent], scores[player]):
+    elif winning_condition(scores[opponent], scores[player]):
         score += scores["win"]
     else:
         score += scores["loose"]
@@ -51,10 +47,10 @@ for round in rounds:
     opponent = round[0]
     player = round[2]
     if scores[player] == 1:
-        score += figureScores[scores[opponent]-1]
+        score += figure_scores[scores[opponent]-1]
     elif scores[player] == 2:
-        score += figureScores[scores[opponent]] + scores["draw"]
+        score += figure_scores[scores[opponent]] + scores["draw"]
     else:
-        score += figureScores[scores[opponent]+1] + scores["win"]
+        score += figure_scores[scores[opponent]+1] + scores["win"]
 
 print(f'Answer to puzzle 2.2: {score}')
