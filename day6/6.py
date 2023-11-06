@@ -18,7 +18,7 @@ class Device():
             for i in range(4, len(self._data_stream)):
 
                 comparable_characters = self._data_stream[(i-4): i]
-                print(comparable_characters)
+                
 
 
 
