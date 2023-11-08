@@ -16,7 +16,7 @@ def format_boxes():
         for line in boxes:
             if(line[n]) != " ":
                 new_line.append(line[n])
-    
+        #esto es porque cada letra de caja esta separada por 4 carateres
         n += 4
         piles_of_boxes.append(new_line)
     return piles_of_boxes
