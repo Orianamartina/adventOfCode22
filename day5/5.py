@@ -54,7 +54,8 @@ for instruction in instructions:
     moving_boxes = piles_of_boxes_p2[origin][0:quantity_to_move]
     piles_of_boxes_p2[origin] = piles_of_boxes_p2[origin][quantity_to_move:]
     piles_of_boxes_p2[destiny] = moving_boxes  + piles_of_boxes_p2[destiny] 
-    
+
+
 answer = ""
 
 for line in piles_of_boxes:
