@@ -40,7 +40,8 @@ def calculate_total_size(node):
     total_size = 0
     if node.size <= 100000:
         total_size += node.size
-
+    for child in node.children.values():
+        total_size += calculate_total_size(child)
     return total_size
 
 input_text = file_contents
