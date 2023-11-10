@@ -8,44 +8,47 @@ class TreeNode:
         self.children = {}
         self.size = 0
 
-def parse_input(input_text):
+def get_file_system(input_text):
     lines = input_text.split('\n')
     root = TreeNode('/')
     current_node = root
     stack = [root]
 
     for line in lines:
-        if line.startswith('$ cd '):
-            directory_name = line[5:]
+        line_content = line.split(" ")
+        indicator = line_content[0]
+        if line == '$ cd ..':
+            stack.pop()
+            current_node = stack[-1]
+        elif line.startswith('$ cd'):
+            directory_name = line_content[2]
             new_node = TreeNode(directory_name)
             current_node.children[directory_name] = new_node
             stack.append(new_node)
             current_node = new_node
-        elif line.startswith('dir '):
-            directory_name = line[4:]
-            new_node = TreeNode(directory_name)
-            current_node.children[directory_name] = new_node
-        elif line and line[0].isdigit():
-            size, name = line.split(' ', 1)
-            size = int(size)
+        elif indicator == "dir":
+            continue
+        elif indicator.isdigit():
+            size = int(indicator)
             current_node.size += size
-        elif line == '$ cd ..':
-            stack.pop()
-            current_node = stack[-1]
-
     return root
 
+def print_tree(node, indent=" "):
+    print(indent + node.name)
+    for child in node.children.values():
+        print_tree(child, indent + "  ")
 
-def calculate_total_size(node):
+def calculate_size(node):
     total_size = 0
     if node.size <= 100000:
         total_size += node.size
     for child in node.children.values():
-        total_size += calculate_total_size(child)
+        total_size += calculate_size(child)
     return total_size
 
-input_text = file_contents
+input_text = file_contents[1:]
 
-root_node = parse_input(input_text)
-total_size = calculate_total_size(root_node)
-print(f"Total size of root: {total_size} bytes")
+root_node = get_file_system(input_text)
+print_tree(root_node)
+total_size = calculate_size(root_node)
+print(f"{total_size} bytes")
