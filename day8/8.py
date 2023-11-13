@@ -37,34 +37,19 @@ def check_if_visible(y, x, matrix):
         check_if_visible_from_right(y,x,matrix)
     )
 
-
-
 def check_if_visible_from_left(y, x, matrix):
-    for i in range(x):
-        if matrix[y][i] >= matrix[y][x]:
-            return False
-    return True
+    return all(matrix[y][i] < matrix[y][x] for i in range(x))
 
 def check_if_visible_from_right(y, x, matrix):
-    for i in range(x + 1, map_width):
-        if matrix[y][i] >= matrix[y][x]:
-            return False
-    return True
+    return all(matrix[y][i] < matrix[y][x] for i in range(x + 1, len(matrix[0])))
 
 def check_if_visible_from_top(y, x, matrix):
-    for i in range(y):
-        if matrix[i][x]  >= matrix[y][x]:
-            return False
-    return True
-def check_if_visible_from_bottom(y, x, matrix):
-    for i in range(y + 1, map_heigth):
-        if matrix[i][x]  >= matrix[y][x]:
-            return False
-    return True
+    return all(matrix[i][x] < matrix[y][x] for i in range(y))
 
+def check_if_visible_from_bottom(y, x, matrix):
+    return all(matrix[i][x] < matrix[y][x] for i in range(y + 1, len(matrix)))
 
 def get_visible_trees(matrix):
-
     visible_trees = 0
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
@@ -73,5 +58,104 @@ def get_visible_trees(matrix):
 
     return (visible_trees)
 
+def get_highest_scenic_score(matrix):
+    highest_score = 0
+    scores = []
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            scores.append(get_score(i, j, matrix))
+            if get_score(i, j, matrix) > highest_score:
+                highest_score = get_score(i, j, matrix)
+
+    return highest_score
+def get_score(y, x, matrix):
+    directions = ['left', 'right', 'top', 'bottom']
+
+    total = 0
+    for direction in directions:
+        total += check_score(direction, x, y, matrix)
+    return total
+
+def check_score(direction, y, x, matrix):
+    tree_height = matrix[y][x]
+    score = 0
+    if direction == 'left':
+        for i in range(x - 1, -1, -1):
+            if matrix[y][i] < tree_height:
+                score += 1
+            else:
+                score += 1
+                break
+    elif direction == 'right':
+        for i in range(x + 1, len(matrix[0])):
+            if matrix[y][i] < tree_height:
+                score += 1
+            else:
+                score += 1
+                break
+    elif direction == 'top':
+        for i in range(y - 1, -1, -1):
+            if matrix[i][x] < tree_height:
+                score += 1
+            else:
+                score += 1
+                break
+    elif direction == 'bottom':
+        for i in range(y + 1, len(matrix)):
+            if matrix[i][x] < tree_height:
+                score += 1
+            else:
+                score += 1
+                break
+    return score
+
+# def check_score_from_left(y, x, matrix):
+#     tree_heigth = matrix[y][x]
+#     score = 0
+#     for i in range(x-1, -1, -1):
+#         if matrix[y][i] < tree_heigth:
+#             score += 1
+#         else:
+#             score += 1
+#             return score
+#     return score
+
+# def check_score_from_right(y, x, matrix):
+#     tree_heigth = matrix[y][x]
+#     score = 0
+#     for i in range(x + 1, map_width):
+#         if matrix[y][i] < tree_heigth:
+#             score += 1
+#         else:
+#             score += 1
+#             return score
+#     return score
+
+# def check_score_from_top(y, x, matrix):
+#     tree_heigth = matrix[y][x]
+#     score = 0
+#     for i in range(y-1, -1, -1):
+#         if matrix[i][x] < tree_heigth:
+#             score += 1
+#         else:
+#             score += 1
+#             return score
+#     return score
+
+# def check_score_from_bottom(y, x, matrix):
+#     tree_heigth = matrix[y][x]
+#     score = 0
+#     for i in range(y + 1, map_heigth):
+#         if matrix[i][x] < tree_heigth:
+#             score += 1
+#         else:
+#             score += 1
+#             return score
+#     return score
+
+
 matrix = format_content(contents)
-print(get_visible_trees(format_content(contents)))
+#p1
+print(get_visible_trees(matrix))
+#p2
+print(get_highest_scenic_score(matrix))
