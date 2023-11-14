@@ -55,30 +55,30 @@ test_initial_coordinates_3 =[
 ]
 class Test_Motion(unittest.TestCase):
 
-    # def test_head_and_tail_coordinates_greater_than_2(self):
+    def test_head_and_tail_coordinates_greater_than_2(self):
     
-    #     for coordinates in test_initial_coordinates_1:
-    #         with self.subTest(coordinates = coordinates):
-    #             tail_coordinates, head_coordinates, dir1 = coordinates
-    #             head = Head(head_coordinates)
-    #             tail = Tail(tail_coordinates)
+        for coordinates in test_initial_coordinates_1:
+            with self.subTest(coordinates = coordinates):
+                tail_coordinates, head_coordinates, dir1 = coordinates
+                head = Head(head_coordinates)
+                tail = Tail(tail_coordinates)
                 
-    #             head.move_to(directions[dir1])
-    #             tail.follow(head)
+                head.move_to(directions[dir1])
+                tail.follow(head)
 
-    #             self.assertEqual(tail._current_position, head._previous_position)                
-    #             self.assertNotEqual(tail._current_position, tail._previous_position)
-    # def test_head_and_tail_coordinates_greater_smaller_than_2(self):
-    #     for coordinates in test_initial_coordinates_2:
-    #         with self.subTest(coordinates = coordinates):
-    #             tail_coordinates, head_coordinates, dir1 = coordinates
-    #             head = Head(head_coordinates)
-    #             tail = Tail(tail_coordinates)
+                self.assertEqual(tail._current_position, head._previous_position)                
+                self.assertNotEqual(tail._current_position, tail._previous_position)
+    def test_head_and_tail_coordinates_greater_smaller_than_2(self):
+        for coordinates in test_initial_coordinates_2:
+            with self.subTest(coordinates = coordinates):
+                tail_coordinates, head_coordinates, dir1 = coordinates
+                head = Head(head_coordinates)
+                tail = Tail(tail_coordinates)
                 
-    #             head.move_to(directions[dir1])
-    #             tail.follow(head)
+                head.move_to(directions[dir1])
+                tail.follow(head)
 
-    #             self.assertEqual(tail._current_position, tail._previous_position)                
+                self.assertEqual(tail._current_position, tail._previous_position)                
         
     def test_head_and_tail_coordinates_greater_equal_to_2(self):
         for coordinates in test_initial_coordinates_3:
@@ -89,14 +89,6 @@ class Test_Motion(unittest.TestCase):
                 
                 head.move_to(directions[dir1])
                 tail.follow(head)
-                print("direction", dir1)
-                print("previous head", head._previous_position)
-                print("current head", head._current_position)              
-                print("previous tail", tail._previous_position)
-                print("current tail", tail._current_position) 
-
-                
-
 
 
 if __name__ == '__main__':

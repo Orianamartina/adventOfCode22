@@ -3,103 +3,126 @@ with open("day9/9input.txt", "r") as file:
 
 from math import sqrt
 
+
+class Coordinate:
+    def __init__(self, x, y):
+        self._x = x
+        self._y = y
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __repr__(self):
+        return f"Coordenada {self.x, self.y}"
+
+class Knot:
+    def __init__(self, x, y):
+        self._previous_position = Coordinate(x, y)
+        self._current_position = Coordinate(x, y)
+
+    @property
+    def current_position(self):
+        return self._current_position
+
+    def move_to(self, direction):
+        self._previous_position = Coordinate(
+            self._current_position.x, self._current_position.y
+        )
+        x, y = direction.values()
+        self._current_position._x += x
+        self._current_position._y += y
+
+    def follow(self, head):
+        distance = distance_between_two_points(
+            head.current_position, self._current_position
+        )
+        self._previous_position = Coordinate(self._current_position.x, self._current_position.y)
+        head_x, head_y = head._current_position.x, head._current_position.y
+        x, y = self._current_position.x, self._current_position.y
+        if abs(head_x - y) or abs(head_y - y) > 1:
+            self._current_position._x +=  (head_x > x) - (head_x < x)
+            self._current_position._y += (head_y > y) - (head_y < y)
+            print(self._current_position)
+
+
+
+directions = {
+    "U": {"x": 0, "y": 1},
+    "D": {"x": 0, "y": -1},
+    "R": {"x": 1, "y": 0},
+    "L": {"x": -1, "y": 0},
+}
+
+
 def instructions():
     instructions = []
     for content in file_contents:
         instructions.append(content.split(" "))
     return instructions
 
+
 def distance_between_two_points(p1, p2):
     x1, y1 = p1.x, p1.y
     x2, y2 = p2.x, p2.y
-    return sqrt((x1 - x2)**2 + (y1 - y2) **2)
-
-class Coordenate():
-    def __init__(self, x, y):
-        self._x = x
-        self._y = y
-    @property
-    def x(self):
-        return self._x
-    @property
-    def y(self):
-        return self._y
-    
-class Tail():
-    def __init__(self, x, y):
-        self._current_position = Coordenate(x, y)
-        self._previous_position = Coordenate(x, y)
-
-    def follow(self, head):
-        x,y = head.current_position.x, head.current_position.y
-        self_x, self_y = self._current_position.x, self._current_position.y, 
-        self._previous_position = self._current_position
-        distance =distance_between_two_points(head.current_position, self._current_position)
-        if distance >= 2 and distance < 3:
-            self._current_position = head._previous_position
-        elif distance < 2:
-            pass
-        """elif distance == 2:
-            print("holaaa")
-            move_x = (self_x - x) 
-            move_y = (self_y - y)
-            print("move x", move_x)
-            print("move_y", move_y)
-            if self_x - x == 2:
-                self._current_position["x"] -= 1
-            elif self_x - x == -2:
-                self._current_position["x"] += 1
-            if self_y-y == 2:
-                self._current_position["y"] -= 1
-            elif self_y-y == -2:
-                self._current_position["y"] += 1
-"""
-            
-
-class Head():
-    def __init__(self, x,y):
-        self._previous_position = Coordenate(x,y)
-        self._current_position = Coordenate(x,y)
-
-    @property
-    def current_position(self):
-        return self._current_position
-    
-    def move_to(self, direction):
-        self._previous_position = self._current_position
-        x, y = direction.values()
-        self._current_position._x += x 
-        self._current_position._y += y
+    return sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
 
-directions = {
-    "U": {"x": 0, "y":1},
-    "D": {"x": 0, "y":-1},
-    "R": {"x": 1, "y":0},
-    "L": {"x": -1, "y": 0}
-}
+def add_visited_coordinates(coordinate, visited_coordinates):
+    if coordinate not in visited_coordinates:
+        visited_coordinates.append(coordinate)
 
-def add_visited_coordenates(cooordenate, visited_coordenates):
-    for visited_coordenate in visited_coordenates:
-        if coordenate.x == visited_coordenate.x and cooordenate.y == visited_coordenate.y:
-            break
-    if cooordenate not in visited_coordenates:
-        visited_coordenates.append(cooordenate)
-        print(cooordenate)
 
-def simulate_motions(list_of_motions, head:Head):
-    visited_coordenates = []
+def simulate_motions(list_of_motions, head, tail):
+    visited_coordinates = []
     for motion in list_of_motions:
         direction, ammount = motion
         for i in range(int(ammount)):
             head.move_to(directions[direction])
             tail.follow(head)
-            add_visited_coordenates(tail._current_position,visited_coordenates)
+            add_visited_coordinates(tail._current_position, visited_coordinates)
 
-    return len(visited_coordenates)
+    return len(visited_coordinates)
 
+def simulate_motions_2(list_of_motions, tails):
+    visited_coordinates = []
+    for motion in list_of_motions:
+        
+        direction, ammount = motion
+        for i in range(int(ammount)):
+            print("-------------")
+            for j, tail in enumerate(tails):
+                if j == 0:
+                    tails[0].move_to(directions[direction])
+                if j < len(tails) - 1:
+                    head = tails[j]
+                    tail = tails[j+1]
+                    tail.follow(head) 
+                    print(f'Head:  {j}, {head._current_position} Tail: {j+1}  {tail._current_position}')
+                else:
 
-head = Head(0, 0)
-tail = Tail(0, 0)
-print(simulate_motions(instructions(), head))
+                    add_visited_coordinates(tails[j].current_position, visited_coordinates)
+                
+    return len(visited_coordinates)
 
+ex =[
+    ["R", "4"], ["U", "4"], ["L", "3"], ["D", "1"],["R", "4"],["D", "1"], ["L", "5"], ["R", "2"]
+]
+ex2=[
+    ["R", "5"], ["U", "8"], ["L", "8"], ["D", "3"], ["R", "17"], ["D", "10"], ["L", "25"], ["U", "20"]
+]
+
+head = Knot(0, 0)
+tail = Knot(0, 0)
+tails = [Knot(0,0) for _ in range(10)]
+
+print(simulate_motions(instructions(), head, tail))
+
+#print(simulate_motions_2(ex1, tails))
