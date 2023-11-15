@@ -36,9 +36,9 @@ class Knot:
         self._previous_position = Coordinate(
             self._current_position.x, self._current_position.y
         )
-        x, y = direction.values()
-        self._current_position._x += x
-        self._current_position._y += y
+
+        self._current_position._x += (direction == "R") - (direction == "L")
+        self._current_position._y += (direction == "U") - (direction == "D")
 
     def follow(self, head):
         distance = distance_between_two_points(
@@ -48,18 +48,12 @@ class Knot:
         head_x, head_y = head._current_position.x, head._current_position.y
         x, y = self._current_position.x, self._current_position.y
         if abs(head_x - y) or abs(head_y - y) > 1:
-            self._current_position._x +=  (head_x > x) - (head_x < x)
-            self._current_position._y += (head_y > y) - (head_y < y)
+           
+            new__x = self._current_position._x +  (head_x > x) - (head_x < x)
+            new_y = self._current_position._y + (head_y > y) - (head_y < y) 
+            self._current_position = Coordinate(new__x, new_y)
             print(self._current_position)
 
-
-
-directions = {
-    "U": {"x": 0, "y": 1},
-    "D": {"x": 0, "y": -1},
-    "R": {"x": 1, "y": 0},
-    "L": {"x": -1, "y": 0},
-}
 
 
 def instructions():
@@ -84,10 +78,13 @@ def simulate_motions(list_of_motions, head, tail):
     visited_coordinates = []
     for motion in list_of_motions:
         direction, ammount = motion
-        for i in range(int(ammount)):
-            head.move_to(directions[direction])
+        for _ in range(int(ammount)):
+            head.move_to(direction)
             tail.follow(head)
-            add_visited_coordinates(tail._current_position, visited_coordinates)
+            coordinate = tail.current_position
+            if coordinate not in visited_coordinates:
+                visited_coordinates.append(coordinate)
+                
 
     return len(visited_coordinates)
 
@@ -100,15 +97,16 @@ def simulate_motions_2(list_of_motions, tails):
             print("-------------")
             for j, tail in enumerate(tails):
                 if j == 0:
-                    tails[0].move_to(directions[direction])
+                    tails[0].move_to(direction)
                 if j < len(tails) - 1:
                     head = tails[j]
                     tail = tails[j+1]
-                    tail.follow(head) 
+                    tail.follow(head)
                     print(f'Head:  {j}, {head._current_position} Tail: {j+1}  {tail._current_position}')
                 else:
-
-                    add_visited_coordinates(tails[j].current_position, visited_coordinates)
+                    coordinate = tails[j].current_position
+                    if coordinate not in visited_coordinates:
+                        visited_coordinates.append(coordinate)
                 
     return len(visited_coordinates)
 
@@ -121,7 +119,7 @@ ex2=[
 
 head = Knot(0, 0)
 tail = Knot(0, 0)
-tails = [Knot(0,0) for _ in range(10)]
+tails = [Knot(0,0) for _ in range(9)]
 
 print(simulate_motions(instructions(), head, tail))
 
