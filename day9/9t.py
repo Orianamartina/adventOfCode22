@@ -24,5 +24,5 @@ tenth = second = list(follow(move(file_contents)))
 for _ in range(8):
     tenth = follow(tenth)
 print(len(set(second)))
-print((set(tenth)))
+print(len(set(tenth)))
 

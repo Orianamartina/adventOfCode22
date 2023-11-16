@@ -1,50 +1,43 @@
+
+rope1 = [[0, 0] for _ in range(2)]
+rope2 = [[0, 0] for _ in range(10)]
+
 with open("day9/9input.txt", "r") as file:
     file_contents = file.readlines()
 
-instructions = []
+def get_tail_coordinate_history(rope):
+    visited_coordinates = set([(0, 0)])
+    for line in file_contents:
+        direction, ammount = line.split()
+        ammount = int(ammount)
 
-for line in file_contents:
-    instructions.append(line.split())
+        for _ in range(ammount):
+            dx = (direction == "R") - (direction == "L")
+            dy = (direction == "U") - (direction == "D")
 
-def move(direction, coordinates):
-    x, y = coordinates
-    x = (direction == "R") - (direction == "L")
-    y = (direction == "U") - (direction == "D")
-    
-    return x, y
+            rope[0][0] += dx
+            rope[0][1] += dy
 
-def follow(knot, head):
-    x, y = knot
-    hx, hy = head
-    if abs(hx - x) > 1 or abs(hy - y) > 1:
-        y += (hy > y) - (hy < y)
-        x += (hx > x) - (hx < x)
-    return x, y
+            for i in range(len(rope) -1):
+                head = rope[i]
+                tail = rope[i + 1]
+
+                _x = head[0] - tail[0]
+                _y = head[1] - tail[1]
+
+                if abs(_x) > 1 or abs(_y) > 1:
+                    if _x == 0:
+                        tail[1] += _y // 2
+                    elif _y == 0:
+                        tail[0] += _x // 2
+                    else:
+                        tail[0] += 1 if _x > 0 else -1
+                        tail[1] += 1 if _y > 0 else -1
+
+            visited_coordinates.add(tuple(rope[-1]))
+
+    print(len(visited_coordinates))
 
 
-def move(instructions, rope):
-    visited_coordenates = []
-    
-    for line in instructions:
-        direction, ammount = line
-        for _ in range(int(ammount)):
-            for i in range(len(rope)):
-                if i == 0:
-                    x,y = rope[0]
-                    x += (direction == "R") - (direction == "L")
-                    y += (direction == "U") - (direction == "D")
-                    rope[0] = (x,y)
-                    rope[i+1] = follow(rope[i+1], (x,y))
-                    print(rope)
-                if i == len(rope) -1:
-                    visited_coordenates.append(rope[i])
-                if i > 0 and i < len(rope) - 1:
-                    rope[i+1] = follow(rope[i+1], rope[i])
-    return(len(set(visited_coordenates)))
-
-ex =[
-    ["R", "4"], ["U", "4"], ["L", "3"], ["D", "1"],["R", "4"],["D", "1"], ["L", "5"], ["R", "2"]
-]
-rope = [(0, 0) for _ in range(9)]
-print(move(instructions[:40], rope))
-#move(instructions, rope)
+get_tail_coordinate_history(rope1)
+get_tail_coordinate_history(rope2)
