@@ -29,36 +29,40 @@ def get_sum_of_signal_strengths():
     print(signal_strengths)
 
 
-crt = [(["." for i in range(40)]) for _ in range(6)]
+def draw_crt():
+    crt = [(["." for i in range(40)]) for _ in range(6)]
 
-tick = 0
-sprite_position = 1
+    tick = 0
+    sprite_position = 1
 
+    def tick_is_under_sprite(tick, sprite_position, row):
+        row = 40 * row
+        return tick in [(sprite_position - 1 + row), (sprite_position + row), (sprite_position + 1 + row)]
 
-def tick_is_under_sprite(tick, sprite_position, row):
-    row = 40 * row
-
-    return tick in [(sprite_position - 1 + row), (sprite_position + row), (sprite_position + 1 + row)]
-
-
-for line in file_contents:
-    if line[0] == "n":
-        row = tick // 40
-        column = tick % 40
-        if tick_is_under_sprite(tick, sprite_position, row):
-            crt[row][column] = "#"
-        tick += 1
-    else:
-        for i in range(2):
-
+    for line in file_contents:
+        if line[0] == "n":
             row = tick // 40
             column = tick % 40
             if tick_is_under_sprite(tick, sprite_position, row):
                 crt[row][column] = "#"
             tick += 1
+        else:
+            for i in range(2):
 
-        ammount = int(line.split()[1])
-        sprite_position += ammount
+                row = tick // 40
+                column = tick % 40
+                if tick_is_under_sprite(tick, sprite_position, row):
+                    crt[row][column] = "#"
+                tick += 1
 
-for i in range(6):
-    print(crt[i])
+            ammount = int(line.split()[1])
+            sprite_position += ammount
+
+    for i in range(6):
+        print(crt[i]
+              )
+
+
+get_sum_of_signal_strengths()
+
+draw_crt()
