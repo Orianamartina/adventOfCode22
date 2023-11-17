@@ -76,12 +76,11 @@ def get_highest_scenic_score(matrix):
 
 
 def get_score(y, x, matrix):
-
-    return(
-        check_score_from_left(y, x, matrix)*
-        check_score_from_right(y, x, matrix)*
-        check_score_from_top(y, x, matrix)*
-        check_score_from_bottom(y, x, matrix)
+    return (
+        check_score_from_left(y, x, matrix)
+        * check_score_from_right(y, x, matrix)
+        * check_score_from_top(y, x, matrix)
+        * check_score_from_bottom(y, x, matrix)
     )
 
 
