@@ -7,7 +7,7 @@ possible_characters = "abcdefghijklmnopqrstuvwxyz"
 def find_packet_in_signal(length_of_packet, data_stream):
     if len(data_stream) >= length_of_packet:
         for i in range(length_of_packet, len(data_stream) + 1):
-            comparable_characters = data_stream[(i - length_of_packet) : i]
+            comparable_characters = data_stream[(i - length_of_packet): i]
 
             if len(set(comparable_characters)) == length_of_packet:
                 return data_stream

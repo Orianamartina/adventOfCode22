@@ -34,28 +34,11 @@ def parse_monkeys():
     return monkeys
 
 
-"""
-Example:
-
-0, 10, 20, 30, etc % 10 = 0
-
-mod 10 is divisible by 2 and 5
-
-
-13 * 11 = 143
-
-if you apply % 143 to a number and is equal to 0, then is divisible by both of them.
-
-in this case, applying a modulo that is divisible by all tests guarantees a way to check if the number is divisible by any of them, just as if the number never changed.
-
-"""
-
-
-def get_most_active_monkeys(monkeys):
-    most_active_monkeys = [0, 0]
+def get_most_active_monkeys(monkeys, positions):
+    most_active_monkeys = [0 for _ in range(positions)]
     for monkey in monkeys:
 
-        for i in range(2):
+        for i in range(positions):
             if monkey["times_inspected"] > most_active_monkeys[i]:
                 most_active_monkeys.insert(i, monkey["times_inspected"])
                 most_active_monkeys = most_active_monkeys[:2]
@@ -91,7 +74,7 @@ def monkey_bussiness(monkeys, iteration, operation):
                     worry_level)
                 monkey["times_inspected"] += 1
 
-    return get_most_active_monkeys(monkeys)
+    return get_most_active_monkeys(monkeys, 2)
 
 
 def monkey_bussiness_with_module(monkeys):

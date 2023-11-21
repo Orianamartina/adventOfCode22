@@ -11,19 +11,18 @@ for content in contents:
     firstHalf = content[:length//2]
     secondHalf = content[length//2:]
     foundItem = list(set(firstHalf).intersection(secondHalf))
-    total_priority += (item_types.index(foundItem[0]))   
+    total_priority += (item_types.index(foundItem[0]))
 
 print(f'puzzle 3.1 answer: {total_priority}')
 
 
-## part 2: divide into groups of three
+# part 2: divide into groups of three
 total_badge_priority = 0
 
 for i in range(0, len(contents), 3):
     group = contents[i:i + 3]
     repeating_char = list(set(group[0]).intersection(*group[1:]))
     total_badge_priority += item_types.index(repeating_char[0])
-
 
 
 print(f'puzzle 3.2 answer: {total_badge_priority}')

@@ -44,16 +44,17 @@ def print_tree(node, indent=" "):
 
 def calculate_size(node):
     total_size = 0
-    
+
     if node.size <= 100000:
         total_size += node.size
     for child in node.children:
-        total_size += calculate_size(child)        
+        total_size += calculate_size(child)
     if len(node.children) == 0 and node.size <= 100000:
         return node.size
     else:
         return total_size
-    
+
+
 def free_up_space(node, size):
     smallest_size = size
     if node.size < smallest_size and node.size >= space_to_free:
@@ -63,7 +64,6 @@ def free_up_space(node, size):
     if len(node.children) == 0 and (node.size < smallest_size and node.size >= space_to_free):
         return node.size
     return smallest_size
-    
 
 
 input_text = file_contents[1:]
