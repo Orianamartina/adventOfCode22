@@ -51,49 +51,6 @@ in this case, applying a modulo that is divisible by all tests guarantees a way 
 """
 
 
-def get_most_active_monkeys(monkeys):
-    most_active_monkeys = [0, 0]
-    for monkey in monkeys:
-
-        for i in range(2):
-            if monkey["times_inspected"] > most_active_monkeys[i]:
-                most_active_monkeys.insert(i, monkey["times_inspected"])
-                most_active_monkeys = most_active_monkeys[:2]
-                break
-    return (most_active_monkeys[0] * most_active_monkeys[1])
-
-
-def monkey_bussiness(monkeys):
-    for _ in range(20):
-        for monkey in monkeys:
-
-            monkey["items"] = monkey["thrown_items"]
-            monkey["thrown_items"] = []
-            for item in monkey["items"]:
-                worry_level = item
-
-                second_number = item if monkey["operation"][2] == "old" else int(
-                    monkey["operation"][2])
-
-                worry_level = item * \
-                    second_number if monkey["operation"][1] == "*" else item + \
-                    second_number
-
-                worry_level //= 3
-
-                if worry_level % int(monkey["divisible"]) == 0:
-                    monkey_to_throw_to = int(monkey["throw_true"])
-
-                else:
-                    monkey_to_throw_to = int(monkey["throw_false"])
-
-                monkeys[monkey_to_throw_to]["thrown_items"].append(
-                    worry_level)
-                monkey["times_inspected"] += 1
-
-    return get_most_active_monkeys(monkeys)
-
-
 def monkey_bussiness_with_module(monkeys):
     for _ in range(10000):
         modulo = 1
@@ -105,24 +62,79 @@ def monkey_bussiness_with_module(monkeys):
             monkey["thrown_items"] = []
             for item in monkey["items"]:
                 worry_level = item
-                second_number = item if monkey["operation"][2] == "old" else int(
-                    monkey["operation"][2])
+                second_number = monkey["operation"][2]
 
-                worry_level = item * \
-                    second_number if monkey["operation"][1] == "*" else item + \
-                    second_number
+                if monkey["operation"][2] == "old":
+                    second_number = item
 
-                worry_level %= modulo
+                second_number = int(second_number)
+                if monkey["operation"][1] == "*":
+                    worry_level = worry_level * second_number
+                else:
+                    worry_level += second_number
+
+                worry_level = worry_level % modulo
                 if worry_level % int(monkey["divisible"]) == 0:
                     monkey_to_throw_to = int(monkey["throw_true"])
+                    monkeys[monkey_to_throw_to]["thrown_items"].append(
+                        worry_level)
                 else:
                     monkey_to_throw_to = int(monkey["throw_false"])
-
-                monkeys[monkey_to_throw_to]["thrown_items"].append(
-                    worry_level)
+                    monkeys[monkey_to_throw_to]["thrown_items"].append(
+                        worry_level)
                 monkey["times_inspected"] += 1
 
-    return get_most_active_monkeys(monkeys)
+    highest_monkeys = [0, 0]
+    for monkey in monkeys:
+
+        for i in range(2):
+            if monkey["times_inspected"] > highest_monkeys[i]:
+                highest_monkeys.insert(i, monkey["times_inspected"])
+                highest_monkeys = highest_monkeys[:2]
+
+    return (highest_monkeys[0] * highest_monkeys[1])
+
+
+def monkey_bussiness(monkeys):
+    for _ in range(20):
+        for monkey in monkeys:
+
+            monkey["items"] = monkey["thrown_items"]
+            monkey["thrown_items"] = []
+            for item in monkey["items"]:
+                worry_level = item
+                second_number = monkey["operation"][2]
+
+                if monkey["operation"][2] == "old":
+                    second_number = item
+
+                second_number = int(second_number)
+                if monkey["operation"][1] == "*":
+                    worry_level = worry_level * second_number
+                else:
+                    worry_level += second_number
+
+                worry_level = worry_level // 3
+
+                if worry_level % int(monkey["divisible"]) == 0:
+                    monkey_to_throw_to = int(monkey["throw_true"])
+                    monkeys[monkey_to_throw_to]["thrown_items"].append(
+                        worry_level)
+                else:
+                    monkey_to_throw_to = int(monkey["throw_false"])
+                    monkeys[monkey_to_throw_to]["thrown_items"].append(
+                        worry_level)
+                monkey["times_inspected"] += 1
+
+    highest_monkeys = [0, 0]
+    for monkey in monkeys:
+
+        for i in range(2):
+            if monkey["times_inspected"] > highest_monkeys[i]:
+                highest_monkeys.insert(i, monkey["times_inspected"])
+                highest_monkeys = highest_monkeys[:2]
+                break
+    return (highest_monkeys[0] * highest_monkeys[1])
 
 
 print(monkey_bussiness(monkeys()))
