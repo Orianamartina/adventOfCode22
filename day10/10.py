@@ -6,12 +6,12 @@ def get_sum_of_signal_strengths():
     signal_strengths = 0
     cicle = 0
     x = 1
-    execution_ammount = 0
+    execution_amount = 0
     searched_cicles = [20, 60, 100, 140, 180, 220]
 
     for line in file_contents:
-        x += execution_ammount
-        execution_ammount = 0
+        x += execution_amount
+        execution_amount = 0
 
         if line[0] == "n":
             cicle += 1
@@ -23,8 +23,8 @@ def get_sum_of_signal_strengths():
                 if cicle in searched_cicles:
                     signal_strengths += cicle * x
 
-                ammount = int(line.split()[1])
-                execution_ammount = ammount
+                amount = int(line.split()[1])
+                execution_amount = amount
 
     print(signal_strengths)
 
@@ -55,8 +55,8 @@ def draw_crt():
                     crt[row][column] = "#"
                 tick += 1
 
-            ammount = int(line.split()[1])
-            sprite_position += ammount
+            amount = int(line.split()[1])
+            sprite_position += amount
 
     for i in range(6):
         print(crt[i]

@@ -46,7 +46,7 @@ def get_most_active_monkeys(monkeys, positions):
     return (most_active_monkeys[0] * most_active_monkeys[1])
 
 
-def monkey_bussiness(monkeys, iteration, operation):
+def monkey_business(monkeys, iteration, operation):
     for _ in range(iteration):
         for monkey in monkeys:
 
@@ -77,13 +77,13 @@ def monkey_bussiness(monkeys, iteration, operation):
     return get_most_active_monkeys(monkeys, 2)
 
 
-def monkey_bussiness_with_module(monkeys):
+def monkey_business_with_module(monkeys):
     modulo = 1
     for monkey in monkeys:
         modulo = modulo * int(monkey["divisible"])
 
-    return monkey_bussiness(monkeys, 10000, lambda x: x % modulo)
+    return monkey_business(monkeys, 10000, lambda x: x % modulo)
 
 
-print(monkey_bussiness(parse_monkeys(), 20, operation=lambda x: x // 3))
-print(monkey_bussiness_with_module(parse_monkeys()))
+print(monkey_business(parse_monkeys(), 20, operation=lambda x: x // 3))
+print(monkey_business_with_module(parse_monkeys()))
