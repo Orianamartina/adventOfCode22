@@ -17,16 +17,16 @@ def parse_monkeys():
             for item in line.split()[2:]:
                 monkeys[current]["items"].append(int(item[0:2]))
             monkeys[current]["thrown_items"] = monkeys[current]["items"]
-        elif line.startswith("  O"):
+        elif "Operation" in line:
             operation = line.split()[3:]
             monkeys[current]["operation"] = operation
-        elif line.startswith("  T"):
+        elif "Test" in line:
             divisible_by = line.split()[-1]
             monkeys[current]["divisible"] = divisible_by
-        elif line.startswith("    If t"):
+        elif "true" in line:
             throw_to = line.split()[-1]
             monkeys[current]["throw_true"] = throw_to
-        elif line.startswith("    If f"):
+        elif "false" in line:
             throw_to = line.split()[-1]
             monkeys[current]["throw_false"] = throw_to
             current += 1

@@ -2,11 +2,6 @@ with open("day12/12input.txt", "r") as file:
     file_contents = file.read()
 
 
-"""
-there could be various path alternatives to follow
-we need the shortest one 
-"""
-
 contents = file_contents.split("\n")
 map_height = len(contents)
 map_width = len(contents[0])
@@ -40,6 +35,10 @@ def set_up_graph(contents):
     return graph
 
 
+visited = []
+queue = []
+
+
 def get_starting_point():
     for i in range(map_height):
         for j in range(map_width):
@@ -54,29 +53,27 @@ def get_highest_point():
                 return ((i * map_width) + j)
 
 
-possible_paths = []
-
-map = set_up_graph(contents)
-n = map_height * map_width
-g = set_up_graph(contents)
-
-
-def solve_search(s, e):
-    queue = []
-    queue.append(s)
-    visited = [False for _ in range(n)]
-    visited[s] = True
-
-    previous = [None for _ in range(n)]
+def get_shortest_path(visited, graph, node):
+    visited.append(node)
+    queue.append(node)
+    path = {}
     while queue:
-        node = queue.pop(0)
-        neighbors = map[node]
-        for next in neighbors:
-            if not visited[next]:
-                queue.append(next)
-                visited[next] = True
-                previous[next] = node
-    return previous
+        m = queue.pop(0)
+        for neighbor in graph[m]:
+            if neighbor not in visited:
+                visited.append(neighbor)
+                queue.append(neighbor)
+            path[neighbor] = graph[m]
+
+    short = []
+    print(path)
+    current = get_highest_point()
+    while current != get_starting_point():
+        short.append(current)
+
+        current = path[current][0]
+
+    return short
 
 
 def reconstructPath(s, e, previous):
@@ -93,9 +90,6 @@ def reconstructPath(s, e, previous):
         return 0
 
 
-def get_shortest_path():
-    prev = solve_search(get_starting_point(), get_highest_point())
-    return reconstructPath(get_starting_point(), get_highest_point(), prev)
-
-
-print(get_shortest_path())
+map = set_up_graph(contents)
+print(get_starting_point())
+# get_shortest_path(visited, map, get_starting_point())

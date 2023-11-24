@@ -29,15 +29,16 @@ def get_sum_of_signal_strengths():
     print(signal_strengths)
 
 
+def tick_is_under_sprite(tick, sprite_position, row):
+    row = 40 * row
+    return tick in [(sprite_position - 1 + row), (sprite_position + row), (sprite_position + 1 + row)]
+
+
 def draw_crt():
-    crt = [(["." for i in range(40)]) for _ in range(6)]
+    crt = [(["." for _ in range(40)]) for _ in range(6)]
 
     tick = 0
     sprite_position = 1
-
-    def tick_is_under_sprite(tick, sprite_position, row):
-        row = 40 * row
-        return tick in [(sprite_position - 1 + row), (sprite_position + row), (sprite_position + 1 + row)]
 
     for line in file_contents:
         if line[0] == "n":
