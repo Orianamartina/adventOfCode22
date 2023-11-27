@@ -35,24 +35,20 @@ def set_up_graph(contents):
     return graph
 
 
-def get_starting_point():
-    for i in range(map_height):
-        for j in range(map_width):
-            if contents[i][j] == "S":
-                return ((i * map_width) + j)
+starting_point = 0
+ending_point = 0
+
+lowest_coordinates = []
 
 
-def get_highest_point():
-    for i in range(map_height):
-        for j in range(map_width):
-            if contents[i][j] == "E":
-                return ((i * map_width) + j)
-
-
-starting_point = get_starting_point()
-ending_point = get_highest_point()
-
-possible_paths = []
+for i in range(map_height):
+    for j in range(map_width):
+        if contents[i][j] == "a":
+            lowest_coordinates.append((i * map_width) + j)
+        elif contents[i][j] == "S":
+            starting_point = ((i * map_width) + j)
+        elif contents[i][j] == "E":
+            ending_point = ((i * map_width) + j)
 
 map = set_up_graph(contents)
 n = map_height * map_width
@@ -84,14 +80,24 @@ def reconstructPath(s, e, previous):
         at = previous[at]
     path = path[::-1]
     if path[0] == s:
-        return path
+        return len(path) - 1
     else:
         return 0
 
 
-def get_shortest_path():
-    prev = solve_search(starting_point, ending_point)
-    return reconstructPath(starting_point, ending_point, prev)
+def get_shortest_path(s, e):
+    prev = solve_search(s, e)
+    return reconstructPath(s, e, prev)
 
 
-print(len(get_shortest_path()))
+def get_shortest_path_from_any_low_point():
+    shortest_path = get_shortest_path(lowest_coordinates[0], ending_point)
+    for coordinate in lowest_coordinates:
+        current_path = get_shortest_path(coordinate, ending_point)
+        if current_path < shortest_path and current_path > 0:
+            shortest_path = current_path
+    return shortest_path
+
+
+print(get_shortest_path_from_any_low_point())
+print(get_shortest_path(starting_point, ending_point))
