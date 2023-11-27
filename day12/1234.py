@@ -71,7 +71,7 @@ def get_shortest_path(visited, graph, node):
     while current != get_starting_point():
         short.append(current)
 
-        current = path[current][0]
+        current = path[current]
 
     return short
 
@@ -82,6 +82,7 @@ def reconstructPath(s, e, previous):
     while at is not None:
         path.append(at)
         at = previous[at]
+        print(path)
 
     path = path.reverse()
     if path[0] == s:
@@ -92,4 +93,4 @@ def reconstructPath(s, e, previous):
 
 map = set_up_graph(contents)
 print(get_starting_point())
-# get_shortest_path(visited, map, get_starting_point())
+get_shortest_path(visited, map, get_starting_point())

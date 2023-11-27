@@ -15,15 +15,12 @@ map_width = len(contents[0])
 # global
 item_heights = "SabcdefghijklmnopqrstuvwxyzE"
 
-all_positions = []
-
 
 def set_up_graph(contents):
 
     graph = {}
     for i in range(map_height):
         for j in range(map_width):
-            all_positions.append((i, j))
             graph[(i, j)] = {'N': 0, 'E': 0, 'S': 0, 'W': 0}
 
             if j > 0:

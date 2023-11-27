@@ -2,11 +2,6 @@ with open("day12/12input.txt", "r") as file:
     file_contents = file.read()
 
 
-"""
-there could be various path alternatives to follow
-we need the shortest one 
-"""
-
 contents = file_contents.split("\n")
 map_height = len(contents)
 map_width = len(contents[0])
@@ -17,22 +12,22 @@ item_heights = "SabcdefghijklmnopqrstuvwxyzE"
 
 def set_up_graph(contents):
 
-    graph = []
+    graph = {}
     counter = 0
     for i in range(map_height):
         for j in range(map_width):
-            graph.append([])
+            graph[counter] = []
             if j > 0:
-                if item_heights.index(contents[i][j-1]) == item_heights.index(contents[i][j]) or item_heights.index(contents[i][j-1]) == item_heights.index(contents[i][j])+1:
+                if item_heights.index(contents[i][j-1]) <= item_heights.index(contents[i][j]) or item_heights.index(contents[i][j-1]) == item_heights.index(contents[i][j])+1:
                     graph[counter].append(counter-1)
             if j < map_width - 1:
-                if item_heights.index(contents[i][j+1]) == item_heights.index(contents[i][j]) or item_heights.index(contents[i][j+1]) == item_heights.index(contents[i][j])+1:
+                if item_heights.index(contents[i][j+1]) <= item_heights.index(contents[i][j]) or item_heights.index(contents[i][j+1]) == item_heights.index(contents[i][j])+1:
                     graph[counter].append(counter+1)
             if i > 0:
-                if item_heights.index(contents[i-1][j]) == item_heights.index(contents[i][j]) or item_heights.index(contents[i-1][j]) == item_heights.index(contents[i][j])+1:
+                if item_heights.index(contents[i-1][j]) <= item_heights.index(contents[i][j]) or item_heights.index(contents[i-1][j]) == item_heights.index(contents[i][j])+1:
                     graph[counter].append(counter - map_width)
             if i < map_height - 1:
-                if item_heights.index(contents[i+1][j]) == item_heights.index(contents[i][j]) or item_heights.index(contents[i+1][j]) == item_heights.index(contents[i][j])+1:
+                if item_heights.index(contents[i+1][j]) <= item_heights.index(contents[i][j]) or item_heights.index(contents[i+1][j]) == item_heights.index(contents[i][j])+1:
                     graph[counter].append(counter + map_width)
             if (i, j) == (20, 0):
                 graph[counter].append(counter + 1)
@@ -54,6 +49,9 @@ def get_highest_point():
                 return ((i * map_width) + j)
 
 
+starting_point = get_starting_point()
+ending_point = get_highest_point()
+
 possible_paths = []
 
 map = set_up_graph(contents)
@@ -66,7 +64,6 @@ def solve_search(s, e):
     queue.append(s)
     visited = [False for _ in range(n)]
     visited[s] = True
-
     previous = [None for _ in range(n)]
     while queue:
         node = queue.pop(0)
@@ -85,8 +82,7 @@ def reconstructPath(s, e, previous):
     while at is not None:
         path.append(at)
         at = previous[at]
-
-    path = path.reverse()
+    path = path[::-1]
     if path[0] == s:
         return path
     else:
@@ -94,8 +90,8 @@ def reconstructPath(s, e, previous):
 
 
 def get_shortest_path():
-    prev = solve_search(get_starting_point(), get_highest_point())
-    return reconstructPath(get_starting_point(), get_highest_point(), prev)
+    prev = solve_search(starting_point, ending_point)
+    return reconstructPath(starting_point, ending_point, prev)
 
 
-print(get_shortest_path())
+print(len(get_shortest_path()))
