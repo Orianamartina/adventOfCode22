@@ -9,11 +9,16 @@ def cmp(l, r):
         case list(), int(): return cmp(l, [r])
         case list(), list():
             for z in map(cmp, l, r):
-                if z:
+                if not z:
                     return z
             return cmp(len(l), len(r))
 
 
 packets = [[*map(eval, x.split())]
            for x in open('day13/13input.txt').read().split('\n\n')]
-print(sum(i for i, p in enumerate(packets, 1) if cmp(*p) == -1))
+
+
+for i, p in enumerate(packets):
+    if cmp(*p) == -1:
+        print(i)
+# print(sum(i for i, p in enumerate(packets, 1) if cmp(*p) == -1))
