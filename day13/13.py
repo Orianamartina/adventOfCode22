@@ -15,49 +15,27 @@ for pair in contents:
 right_order_indexes = []
 
 
-def compare_list_int(a: list, b: int):
-    if len(a) == 0:
-        return True
-    head_a = a.pop(0)
-    if type(head_a) is list:
-        return compare_list_int(head_a, b)
-    return head_a < b
+def compare_list(a, b):
+    if type(a) is int and type(b) is int:
+            
+        if a > b: return -1
+        elif a == b: return 0
+        else: return 1
 
-
-def compare_int_list(a: int, b: list):
-    if len(b) == 0:
-        return False
-    head_b = b.pop(0)
-    if type(head_b) is list:
-        return compare_int_list(a, head_b)
-    return a < head_b
-
-
-def compare_list(a: list, b: list):
-    print("comparing: a", a, "b: ", b)
-    if len(a) == 0:
-        return True
-
-    if len(b) == 0:
-        return False
-    head_a = a.pop(0)
-    head_b = b.pop(0)
-    print("comparing: a", head_a, "b: ", head_b)
-    if type(head_a) is list and type(head_b) is list:
-        return compare_list(head_a, head_b)
-    if type(head_a) is list and type(head_b) is int:
-        return compare_list(head_a, [head_b])
-    if type(head_a) is int and type(head_b) is list:
-        return compare_list([head_a], head_b)
-    if head_a == head_b:
-        return compare_list(a, b)
-
-    return head_a < head_b
-
+    if type(a) is int:
+        a = [a] 
+    if type(b) is int:
+        b = [b]
+    shortest_list = min( len(a),len(b))
+    for i in range(shortest_list):
+        is_ordered = compare_list(a[i], b[i])
+        if is_ordered == 0: continue
+        else: return is_ordered
+    return(compare_list(len(a), len(b)))
 
 for i, pair in enumerate(pairs, start=1):
 
-    if compare_list(*pair):
+    if compare_list(*pair) == 1:
         right_order_indexes.append(i)
 
 print(sum(right_order_indexes))
