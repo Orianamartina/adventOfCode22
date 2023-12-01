@@ -1,8 +1,6 @@
 with open("day13/13input.txt", "r") as file:
     file_contents = file.read()
 
-from itertools import zip_longest
-
 import ast
 
 contents = file_contents.split('\n\n')
@@ -57,37 +55,9 @@ def compare_list(a: list, b: list):
     return head_a < head_b
 
 
-def compare(a, b):
-    paired_items = zip_longest(a, b, fillvalue=None)
-
-    answer = None
-
-    for pair in paired_items:
-        a, b = pair
-
-    if type(a) is int and type(b) is int:
-        return a < b
-    if type(a) is list and type(b) is int:
-        answer = compare(a, b)
-    if type(a) is int and type(b) is list:
-        answer = compare([a], b)
-    if type(b) is int and type(a) is list:
-        answer = compare(a, [b])
-
-    if a == None:
-        return True
-    if b == None:
-        return False
-
-    if answer != None:
-        return answer
-
-
 for i, pair in enumerate(pairs, start=1):
 
     if compare_list(*pair):
         right_order_indexes.append(i)
 
-    if i == 84:
-        print(i)
-print(right_order_indexes)
+print(sum(right_order_indexes))
