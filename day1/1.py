@@ -1,6 +1,7 @@
 with open("day1/1input.txt", "r") as file:
     file_contents = file.read()
-
+import time
+start_time = time.time()
 number_groups = file_contents.split('\n\n')
 number_group_lists = [list(map(int, group.split())) for group in number_groups]
 
@@ -10,7 +11,7 @@ for group in number_group_lists:
     calories = sum(group)
     if calories > maxCalories:
         maxCalories = calories
-    
+
 
 print(f'Answer to puzzle 1.1: {maxCalories}')
 
@@ -25,6 +26,6 @@ for group in number_group_lists:
             top_calories = top_calories[:3]
             break
 
-print (f'answer to puzzle 1.2: {sum(top_calories)}')
-
-
+print(f'answer to puzzle 1.2: {sum(top_calories)}')
+end_time = time.time()
+print("elapsed time", end_time - start_time, "seconds")

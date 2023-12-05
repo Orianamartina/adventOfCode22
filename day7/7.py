@@ -1,5 +1,7 @@
 with open("day7/7input.txt", "r") as file:
     file_contents = file.read()
+import time
+start_time = time.time()
 
 
 class TreeNode:
@@ -76,3 +78,5 @@ space_to_free = (30000000 - (70000000 - root_node.size))
 
 print(f"{total_size} bytes")
 print(free_up_space(root_node, root_node.size))
+end_time = time.time()
+print("elapsed time", end_time - start_time, "seconds")

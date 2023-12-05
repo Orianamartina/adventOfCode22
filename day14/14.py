@@ -1,6 +1,7 @@
 with open("day14/14input.txt", "r") as file:
     file_contents = file.read()
-
+import time
+start_time = time.time()
 
 contents = file_contents.split('\n')
 
@@ -151,5 +152,7 @@ for item in map[:-1]:
     lines.append(line)
 
 for i in lines:
-    print(i[60:-60])
+    print(i[80:-80])
 print(counter)
+end_time = time.time()
+print("elapsed time", end_time - start_time, "seconds")
