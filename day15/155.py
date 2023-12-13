@@ -59,13 +59,15 @@ map = coordinates
 
 def find_signal(map):
     counter = 1
+    passed_coordinates = defaultdict(lambda: 0)
     for i, coordinate in enumerate(map):
         sensor_x, sensor_y = coordinate["sensor"]
 
         print("Analyzing: ", counter, "/", len(pair_distances))
         beacon_distance = pair_distances[i] + 1
+
         distance = generate_points_with_manhattan_distance(
-            sensor_x, sensor_y, beacon_distance
+            sensor_x, sensor_y, beacon_distance, passed_coordinates
         )
         if distance:
             return distance
@@ -73,25 +75,27 @@ def find_signal(map):
 
 
 def generate_points_with_manhattan_distance(
-    central_x, central_y, radius
+    central_x, central_y, radius, passed_coordinates
 ):
     limit = 4000000
     for x in range(max(central_x - radius, 0), min(central_x + radius + 1, limit)):
         possible_y_values = radius - abs(x - central_x)
         length = len(pair_distances)
         for y in [central_y + possible_y_values, central_y - possible_y_values]:
-
+            counter = 0
             if y < limit and y > 0:
-                counter = 0
-                for j, coordinate in enumerate(map):
-                    sensor = coordinate["sensor"]
-                    distance = manhattan_distance(x, y, sensor[0], sensor[1])
-                    if distance <= pair_distances[j]:
-                        break
-                    else:
-                        counter += 1
-                if counter == length:
-                    return (x, y)
+                passed_coordinates[(x, y)] += 1
+                if passed_coordinates[(x, y)] >= 4:
+                    for j, coordinate in enumerate(map):
+                        sensor = coordinate["sensor"]
+                        distance = manhattan_distance(
+                            x, y, sensor[0], sensor[1])
+                        if distance <= pair_distances[j]:
+                            break
+                        else:
+                            counter += 1
+                    if counter == length:
+                        return (x, y)
 
 
 print("15.1", positions_that_dont_contain_beacons_in(

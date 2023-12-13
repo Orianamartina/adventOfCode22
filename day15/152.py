@@ -33,7 +33,7 @@ for pair in coordinates:
 
 def positions_that_dont_contain_beacons_in(row, map):
     empty_coordinates = set()
-    used_x = set()
+    used_x = []
     for i, coordinate in enumerate(map):
         sensor, beacon = coordinate.values()
         sensor_x, sensor_y = sensor
@@ -43,9 +43,9 @@ def positions_that_dont_contain_beacons_in(row, map):
 
         limit = max(beacon_distance - abs(row - sensor_y), 0)
         if sensor_y == row:
-            used_x.add(sensor_x)
+            used_x.append(sensor_x)
         if beacon_y == row:
-            used_x.add(beacon_x)
+            used_x.append(beacon_x)
         for i in range(sensor_x - limit, sensor_x + limit + 1):
             if i not in used_x:
                 empty_coordinates.add(i)
@@ -59,46 +59,57 @@ map = coordinates
 
 def find_signal(map):
     counter = 1
+    coordinates = defaultdict(lambda: 0)
+    several_intersections = []
     for i, coordinate in enumerate(map):
-        sensor_x, sensor_y = coordinate["sensor"]
+        sensor, beacon = coordinate.values()
+        sensor_x, sensor_y = sensor
 
         print("Analyzing: ", counter, "/", len(pair_distances))
         beacon_distance = pair_distances[i] + 1
-        distance = generate_points_with_manhattan_distance(
-            sensor_x, sensor_y, beacon_distance
+
+        generate_points_with_manhattan_distance(
+            sensor_x, sensor_y, beacon_distance, coordinates, several_intersections
         )
-        if distance:
-            return distance
         counter += 1
+    possible_beacon_position = set(several_intersections)
+    for coordinate in several_intersections:
+        for device_pair in map:
+            sensor, beacon = device_pair.values()
+            sensor_x, sensor_y = sensor
+            intersection_distance = manhattan_distance(
+                sensor_x, sensor_y, coordinate[0], coordinate[1]
+            )
+            sensor_beacon_distance = pair_distances[i]
+            if (
+                intersection_distance <= sensor_beacon_distance
+                and coordinate in possible_beacon_position
+            ):
+                possible_beacon_position.remove(coordinate)
+    return possible_beacon_position
 
 
 def generate_points_with_manhattan_distance(
-    central_x, central_y, radius
+    central_x, central_y, radius, coordinates, several_intersections
 ):
-    limit = 4000000
-    for x in range(max(central_x - radius, 0), min(central_x + radius + 1, limit)):
-        possible_y_values = radius - abs(x - central_x)
-        length = len(pair_distances)
-        for y in [central_y + possible_y_values, central_y - possible_y_values]:
-
-            if y < limit and y > 0:
-                counter = 0
-                for j, coordinate in enumerate(map):
-                    sensor = coordinate["sensor"]
-                    distance = manhattan_distance(x, y, sensor[0], sensor[1])
-                    if distance <= pair_distances[j]:
-                        break
-                    else:
-                        counter += 1
-                if counter == length:
-                    return (x, y)
+    for x in range(central_x - radius, central_x + radius + 1):
+        if x > 0 and x < 4000000:
+            possible_y_values = radius - abs(x - central_x)
+            y1 = central_y + possible_y_values
+            y2 = central_y - possible_y_values
+            coordinates[(x, y1)] += 1
+            coordinates[(x, y2)] += 1
+            if coordinates[(x, y1)] >= 4:
+                several_intersections.append((x, y1))
+            if coordinates[(x, y2)] >= 4:
+                several_intersections.append((x, y2))
 
 
 print("15.1", positions_that_dont_contain_beacons_in(
     2000000, coordinates))
 print("Part 2:")
 part_two = list(find_signal(map))
-print("15.2", (part_two[0] * 4000000) + part_two[1])
+print("15.2", (part_two[0][0] * 4000000) + part_two[0][1])
 
 end = time()
 

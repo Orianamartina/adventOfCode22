@@ -59,39 +59,49 @@ map = coordinates
 
 def find_signal(map):
     counter = 1
+    several_intersections = []
     for i, coordinate in enumerate(map):
-        sensor_x, sensor_y = coordinate["sensor"]
+        sensor, beacon = coordinate.values()
+        sensor_x, sensor_y = sensor
 
         print("Analyzing: ", counter, "/", len(pair_distances))
         beacon_distance = pair_distances[i] + 1
-        distance = generate_points_with_manhattan_distance(
-            sensor_x, sensor_y, beacon_distance
+        several_intersections.append([])
+        generate_points_with_manhattan_distance(
+            sensor_x, sensor_y, beacon_distance, several_intersections, i
         )
-        if distance:
-            return distance
         counter += 1
+    for i, perimeter in enumerate(several_intersections):
+        for point in perimeter:
+            counter = 0
+            for j, coordinate in enumerate(map):
+                if j == i:
+                    continue
+                distance = manhattan_distance(
+                    point[0], point[1], coordinate["sensor"][0], coordinate["sensor"][1])
+                if distance <= pair_distances[j]:
+                    break
+                else:
+                    counter += 1
+            if counter == len(map)-1:
+                return point
 
 
 def generate_points_with_manhattan_distance(
-    central_x, central_y, radius
+    central_x, central_y, radius, several_intersections, i
 ):
     limit = 4000000
-    for x in range(max(central_x - radius, 0), min(central_x + radius + 1, limit)):
-        possible_y_values = radius - abs(x - central_x)
-        length = len(pair_distances)
-        for y in [central_y + possible_y_values, central_y - possible_y_values]:
-
-            if y < limit and y > 0:
-                counter = 0
-                for j, coordinate in enumerate(map):
-                    sensor = coordinate["sensor"]
-                    distance = manhattan_distance(x, y, sensor[0], sensor[1])
-                    if distance <= pair_distances[j]:
-                        break
-                    else:
-                        counter += 1
-                if counter == length:
-                    return (x, y)
+    for x in range(central_x - radius, central_x + radius + 1):
+        if x > 0 and x < limit:
+            possible_y_values = radius - abs(x - central_x)
+            y1 = central_y + possible_y_values
+            y2 = central_y - possible_y_values
+            c = []
+            if y1 < limit and y1 > 0:
+                c.append((x, y1))
+            if y2 < limit and y2 > 0:
+                c.append((x, y2))
+            several_intersections[i] += c
 
 
 print("15.1", positions_that_dont_contain_beacons_in(
