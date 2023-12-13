@@ -85,7 +85,7 @@ def generate_points_with_manhattan_distance(
             counter = 0
             if y < limit and y > 0:
                 passed_coordinates[(x, y)] += 1
-                if passed_coordinates[(x, y)] >= 4:
+                if passed_coordinates[(x, y)] == 4:
                     for j, coordinate in enumerate(map):
                         sensor = coordinate["sensor"]
                         distance = manhattan_distance(
