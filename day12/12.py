@@ -99,5 +99,6 @@ def get_shortest_path_from_any_low_point():
     return shortest_path
 
 
+print(starting_point)
 print(get_shortest_path_from_any_low_point())
 print(get_shortest_path(starting_point, ending_point))

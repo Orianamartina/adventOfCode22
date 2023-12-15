@@ -1,5 +1,5 @@
 import re
-with open("day16/16input.txt", "r") as file:
+with open("day16/ex.txt", "r") as file:
     file_contents = file.read()
 
 graph = {}
@@ -41,7 +41,6 @@ def solve_search(start_node, graph):
     visited[start_node] = True
     previous = {node: None for node in graph}
     while queue:
-
         current_node = queue.pop(0)
         neighbors = graph[current_node]["connected_valves"]
         for next_node in neighbors:
@@ -65,43 +64,47 @@ def reconstructPath(s, e, previous):
         return 0
 
 
-def get_next_node(data, minutes_left):
-    # data: {flow_rate: distance}
-    rates = []
-    for node in data:
-        flow, distance = next(iter(node.items()))
-        if minutes_left - distance + 1 == 0:
-            distance += 1
-        rates.append(flow / (minutes_left - distance + 1))
+def traveling_salesman(graph, current_node, visited, time_remaining):
+    if not visited:
+        visited = set()
+    visited.add(current_node)
 
-    return (rates.index(max(rates)))
+    if not graph[current_node]['connected_valves']:
+        return 0
+
+    min_cost = float('inf')
+
+    for neighbor in graph[current_node]['connected_valves']:
+        if neighbor not in visited:
+            move_time = 1
+            open_time = 1
+            cost = move_time + open_time + traveling_salesman(
+                graph,
+                neighbor,
+                visited.copy(),
+                time_remaining - move_time - open_time,
+            )
+            min_cost = min(min_cost, cost)
+
+    return min_cost
 
 
-mins = 0
-i = 0
-total_pressure_release = 0
-current_valve = "AA"
-while mins < 30:
-    print("Current valve: ", current_valve)
-    total_path = solve_search(current_valve, graph)
-    sorted_valves = sort_graph_by_flow_rate(graph)
-    print(sorted_valves)
-    possible_valves = []
-    for valve in sorted_valves:
+graph = {
+    'AA': {'flow_rate': 0, 'connected_valves': ['DD', 'II', 'BB']},
+    'BB': {'flow_rate': 13, 'connected_valves': ['CC', 'AA']},
+    'CC': {'flow_rate': 2, 'connected_valves': ['DD', 'BB']},
+    'DD': {'flow_rate': 20, 'connected_valves': ['CC', 'AA', 'EE']},
+    'EE': {'flow_rate': 3, 'connected_valves': ['FF', 'DD']},
+    'FF': {'flow_rate': 0, 'connected_valves': ['EE', 'GG']},
+    'GG': {'flow_rate': 0, 'connected_valves': ['FF', 'HH']},
+    'HH': {'flow_rate': 22, 'connected_valves': ['GG']},
+    'II': {'flow_rate': 0, 'connected_valves': ['AA', 'JJ']},
+    'JJ': {'flow_rate': 21, 'connected_valves': ['II']},
+}
 
-        graph_valve = graph[valve[0]]
-        possible_valves.append({graph_valve["flow_rate"]: reconstructPath(
-            current_valve, valve[0], total_path)})
-        # el indice de esto es el mismo que el indice en sorted valves
-    if possible_valves:
-        closest_valve = get_next_node(possible_valves, mins)
-        current_valve = sorted_valves[closest_valve]
-        time_spent = next(iter(possible_valves[closest_valve].values()))
-        mins += time_spent + 1
-        total_pressure_release += (30 - mins) * \
-            sorted_valves[closest_valve][1]["flow_rate"]
-        graph[sorted_valves[closest_valve][0]]["flow_rate"] = 0
-        current_valve = current_valve[0]
-    else:
-        mins = 30
-print(total_pressure_release)
+start_node = 'AA'
+time_limit = 30
+
+min_total_cost = traveling_salesman(graph, start_node, set(), time_limit)
+
+print(f"Maximum gas flow in 30 minutes: {min_total_cost}")
