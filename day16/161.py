@@ -70,10 +70,7 @@ def get_next_node(data, minutes_left):
     rates = []
     for node in data:
         flow, distance = next(iter(node.items()))
-        if minutes_left - distance + 1 == 0:
-            distance += 1
-        rates.append(flow / (minutes_left - distance + 1))
-
+        rates.append(flow * (minutes_left - distance + 1))
     return (rates.index(max(rates)))
 
 

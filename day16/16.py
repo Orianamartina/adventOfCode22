@@ -23,27 +23,14 @@ for line in input_data.strip().split('\n'):
 print(G.nodes["AA"])
 print(list(G.neighbors("AA")))
 
-#get highest pressure release valves
-#start from AA and go to t
+# get highest pressure release valves
+# start from AA and go to t
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # Draw the graph
-# pos = nx.spring_layout(G)
-# nx.draw(G, pos, with_labels=True, font_weight='bold', node_size=700,
-#         node_color='skyblue', font_size=8, edge_color='gray')
-# labels = nx.get_edge_attributes(G, 'flow_rate')
-# nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
-# plt.show()
+# Draw the graph
+pos = nx.spring_layout(G)
+nx.draw(G, pos, with_labels=True, font_weight='bold', node_size=700,
+        node_color='skyblue', font_size=8, edge_color='gray')
+labels = nx.get_edge_attributes(G, 'flow_rate')
+nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+plt.show()
