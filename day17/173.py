@@ -1,71 +1,94 @@
 with open("day17/ex.txt", "r") as file:
     file_contents = file.read()
 
-
-print(file_contents)
 """The tall, vertical chamber is exactly seven units wide. Each rock appears so that its left edge is two units away 
 from the left wall and its bottom edge is three units above the highest rock in the room (or the floor, if there isn't one)."""
-
-
+"""
+['..##...']
+['..##...']
+['....#..']
+['....#..']
+['....#..']
+['....#..']
+['..#....']
+['..#....']
+['###....']
+['...#...']
+['..###..']
+['...#...']
+['..####.']
+['-------']
+"""
 rocks = [
-    ["####"], [".#.", "###", ".#."], ["###", "..#", "..#",], [
-        "#", "#", "#", "#"], ["##.", "##."]
+    ([0b0011110], 0),
+    ([0b0001000, 0b0011100, 0b0001000], 1),
+    ([0b0011100, 0b0000100, 0b0000100], 0),
+    ([0b0010000, 0b0010000, 0b0010000], 0),
+    ([0b0011000, 0b0011000], 0),
 ]
-
-chamber = {"map":  ["#" * 7], "upper": 1}
-
-
-def get_shift(i):
-    if file_contents[i] == ">":
-        return 1
-    else:
-        return -1
+rocks = [
+    ["1111"], ["010", "111", "010"], ["111", "001", "001",], [
+        "1", "1", "1", "1"], ["11", "11"]
+]
+rocks = rocks * 404
+rocks += ["1111"], ["010", "111", "010"]
+chamber = {"map":  [[], [0, 1, 2, 3, 4, 5, 6]], "upper": 0}
 
 
-def drop_one(rock, x, y, chamber):
-    for line in rock:
-        if y < len(chamber):
-            print("wenas")
-            return "#" not in chamber[y][x:x+len(rock)]
-    return True
+class Rock():
+
+    def __init__(self, shape, y):
+        self._shape = shape[0]
+        self._max_width = shape[0][shape[1]]
+        self._x = 2
+        self._y = y
+
+    def shift(self, direction):
+        if direction == ">" and self._max_width[0]:
+            pass
+
+    def drop(self, map):
+        if map.check_if_fits(self):
+            self._y -= 1
 
 
-def rest_rock(rock, x, y, chamber):
-    for line in rock:
-        if y >= len(chamber):
-            chamber.append("")
-        h1 = chamber[y][:x]
-        h2 = line
-        h3 = chamber[y][:x+len(line)]
-        chamber[y] = h1 + h2 + h3
-        y += 1
+class Map():
+    def __init__(self):
+        self._rows = [["-", "-", "-", "-", "-",
+                       "-", "-"], [1, 1, 1, 1, 1, 1, 1]]
+        self._width = 7
+        self._current_shift = 0
+        self._heigth = 1
+        self._new_row = [1, 1, 1, 1, 1, 1, 1]
 
+    def avalaible_in_row(self, row):
+        return self._rows[row]
 
-def drop_rocks(chamber):
+    def row_is_empty(self, row):
+        return len(row) == 0
 
-    i = 0
+    def get_next_shift(self):
+        self._current_shift += 1
+        return file_contents[self._current_shift]
 
-    # tick:
-    for rock in rocks:
-        x = 2
-        rock_is_resting = False
-        y = chamber["upper"] + 4
-        while not rock_is_resting:
-            print(i)
-            shift = get_shift(i)
-            x += shift
-            if drop_one(rock, x, y, chamber["map"]):
-                print(drop_one(rock, x, y, chamber["map"]))
-                y -= 1
-                i += 1
-            else:
-                rest_rock(rock, x, y, chamber["map"])
-                if y > chamber["upper"]:
-                    chamber["upper"] = y
-                rock_is_resting = True
+    def line_fits(self, x, y, line):
 
+        for i in line:
+            if not self.avalaible_in_row(y)[x+i]:
+                return False
+            if y > self._heigth:
+                self._rows.append(self._new_row)
+                return True
+        return True
 
-drop_rocks(chamber)
+    def check_if_fits(self, rock):
+        # y = rock._y
+        # x = rock._x
+        for line in rock._shape:
+            if not self._line_fits(rock._x, rock._y, line):
+                return False
+        return True
 
-for line in chamber["map"]:
-    print(line)
+    def tick(self, rock: Rock):
+        rock.shift(self.get_next_shift())
+        rock.drop()
